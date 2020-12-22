@@ -43,6 +43,7 @@ int UMain(int argc, UChar* argv[])
 	delete[] pTemp;
 	if (!sTxt.empty())
 	{
+		bool bError = false;
 		vector<wstring> vTxt = SplitOf(sTxt, L"\r\n");
 		for (n32 i = 0; i < static_cast<n32>(vTxt.size()); i++)
 		{
@@ -54,15 +55,23 @@ int UMain(int argc, UChar* argv[])
 			vector<wstring> vLine = Split(sLine, L"=");
 			if (vLine.size() < 2)
 			{
-				UPrintf(USTR("ERROR: %") PRIUS USTR("\n"), argv[3]);
-				UPrintf(USTR("ERROR: %") PRIUS USTR("\n"), WToU(sLine).c_str());
-				return 1;
+				if (!bError)
+				{
+					UPrintf(USTR("ERROR: %") PRIUS USTR("\n"), argv[3]);
+				}
+				UPrintf(USTR("%") PRIUS USTR("\n"), WToU(sLine).c_str());
+				bError = true;
+				continue;
 			}
 			for (n32 j = 2; j < static_cast<n32>(vLine.size()); j++)
 			{
 				vLine[1] += L"=" + vLine[j];
 			}
 			vReplacement.push_back(make_pair(vLine[0], vLine[1]));
+		}
+		if (bError)
+		{
+			return 1;
 		}
 	}
 	stable_sort(vReplacement.begin(), vReplacement.end(), OrigCompare);
