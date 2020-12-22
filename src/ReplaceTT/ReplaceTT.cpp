@@ -52,6 +52,12 @@ int UMain(int argc, UChar* argv[])
 				continue;
 			}
 			vector<wstring> vLine = Split(sLine, L"=");
+			if (vLine.size() < 2)
+			{
+				UPrintf(USTR("ERROR: %") PRIUS USTR("\n"), argv[3]);
+				UPrintf(USTR("ERROR: %") PRIUS USTR("\n"), WToU(sLine).c_str());
+				return 1;
+			}
 			for (n32 j = 2; j < static_cast<n32>(vLine.size()); j++)
 			{
 				vLine[1] += L"=" + vLine[j];
